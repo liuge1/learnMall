@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Classname RedisServiceImpl
- * @Description TODO
+ * @Description redis操作Service的实现类
  * @Date 2020/8/18 20:36
  * @Created by v_geeliu
  */
