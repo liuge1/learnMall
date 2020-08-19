@@ -35,7 +35,7 @@ public class JwtTokenUtil {
   /**
    * 根据负载生成JWT的token
    */
-  private String generateToken(UserDetails userDetails) {
+  public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
     claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
     claims.put(CLAIM_KEY_CREATED, new Date());
@@ -45,7 +45,7 @@ public class JwtTokenUtil {
   /**
    * 根据用户信息的token
    */
-  private String generateToken(Map<String, Object> claims) {
+  public String generateToken(Map<String, Object> claims) {
     return Jwts.builder()
         .setClaims(claims)
         .setExpiration(generateExpirationDate())
