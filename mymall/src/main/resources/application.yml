@@ -10,7 +10,7 @@ spring:
   redis:
     host: localhost
     databast: 0
-    port: 639
+    port: 6379
     password: #redis服务器连接密码（默认为空）
     jedis:
       pool:

@@ -31,18 +31,16 @@ public class UmsMemberServiceImpl implements UmsMemberService {
 
   @Override
   public CommonResult generateAuthCode(String telephone) {
-    StringBuilder sb = new StringBuilder();
-    Random random = new Random();
-    for (int i = 0; i < 6; i++) {
-      sb.append(random.nextInt(10));
-    }
+//    StringBuilder sb = new StringBuilder();
+//    Random random = new Random();
+//    for (int i = 0; i < 6; i++) {
+//      sb.append(random.nextInt(10));
+//    }
     //直接生成六位短信验证码
     String verifyCode = String.valueOf(new Random().nextInt(899999) + 100000);
-
-    redisService.set(REDIS_KEY_PREFIX_AUTH_CODE + telephone, sb.toString());
+    redisService.set(REDIS_KEY_PREFIX_AUTH_CODE + telephone, verifyCode);
     redisService.expire(REDIS_KEY_PREFIX_AUTH_CODE + telephone, AUTH_CODE_EXPIRE_SECONDS);
-
-    return CommonResult.success(sb.toString(), "获取验证码成功");
+    return CommonResult.success(verifyCode, "获取验证码成功");
   }
 
   @Override
@@ -51,7 +49,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
       return CommonResult.failed("请输入验证码");
     }
     String realAuthCode = redisService.get(REDIS_KEY_PREFIX_AUTH_CODE + telephone);
-
     if (authCode.equals(realAuthCode)) {
       return CommonResult.success("验证码校验成功");
     } else {
