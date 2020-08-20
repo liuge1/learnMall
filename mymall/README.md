@@ -30,3 +30,31 @@ http://www.macrozheng.com
     * JwtAuthenticationTokenFilter 在用户名和密码校验前添加的过滤器，如有有jwt的token，会自行根据token信息进行登录
 
 5 SpringTask 实现定时任务
+
+6 ElasticSearch 
+  1.  下载Windows版本
+    https://www.elastic.co/cn/downloads/past-releases/elasticsearch-6-2-2
+    
+  2.  **安装中文分词插件，在elasticsearch-6.2.2\bin目录下执行以下命令：elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.2.2/elasticsearch-analysis-ik-6.2.2.zip**
+    
+  3.  elasticsearch.bat  启动ES
+  
+  4. 下载kibana，作为访问ES 的客户端
+      https://artifacts.elastic.co/downloads/kibana/kibana-6.2.2-windows-x86_64.zip
+      进入bin文件 点击kibana
+  常用的注解
+  
+7. mongodb
+    安装地址 https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-3.2.21-signed.msi
+    启动服务：net start MongoDB
+    关闭服务：net stop MongoDB
+    移除服务：D:\developer\env\MongoDB\bin\mongod.exe --remove
+    
+    下载客户端程序https://download.robomongo.org/1.2.1/windows/robo3t-1.2.1-windows-x86_64-3e50a65.zip
+
+
+ 
+  
+  
+   
+    
