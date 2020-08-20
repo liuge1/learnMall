@@ -56,10 +56,10 @@ public class JwtTokenUtil {
   /**
    * 从token中获取JWT中的负载
    */
-  private Claims getClaimsFromToken(String token) {
+  private Claims  getClaimsFromToken(String token) {
     Claims claims = null;
     try {
-      Jwts.parser()
+      claims=Jwts.parser()
           .setSigningKey(secret)
           .parseClaimsJws(token)
           .getBody();

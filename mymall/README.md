@@ -20,3 +20,13 @@ http://www.macrozheng.com
    ums_admin_role_relation：后台用户和角色关系表，用户与角色是多对多关系
    ums_role_permission_relation：后台用户角色和权限关系表，角色与权限是多对多关系
    ums_admin_permission_relation：后台用户和权限关系表(除角色中定义的权限以外的加减权限)，加权限是指用户比角色多出的权限，减权限是指用户比角色少的权限
+   
+    * configure(HttpSecurity httpSecurity) 用于配置需要拦截的url路径，jwt过滤器及出异常后的处理器
+    * configure(AuthenticationManagerBuilder auth) 用于配置UserDetailsService及PasswordEncode
+    * RestfulAccessDenieddHandler 当用户没有访问权限时的处理，用于返回json格式的处理
+    * RestAuthenticationEntryPoint 当未登录或token失效时，返回json格式的结果
+    * UserDetailsService SpringSecurity 定义的核心接口，用于根据用户名获取用户信息，需要自行实现
+    * UserDetails SpringSecurity 定义的用于对密码进行编码比对的接口，目前使用的是BCryptPasswordEncoder
+    * JwtAuthenticationTokenFilter 在用户名和密码校验前添加的过滤器，如有有jwt的token，会自行根据token信息进行登录
+
+5 SpringTask 实现定时任务

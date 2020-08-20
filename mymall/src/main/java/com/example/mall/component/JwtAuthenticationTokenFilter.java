@@ -39,6 +39,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    //在用户名和密码校验前添加的过滤器，如果有jwt的token，会自行根据token信息进行登录
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

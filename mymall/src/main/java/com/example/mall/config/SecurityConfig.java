@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+    //用于配置需要拦截的url路径，jwt过滤器以及异常后的处理器
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
@@ -77,12 +78,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(restfulAccessDeniedHandler)
                 .authenticationEntryPoint(restAuthenticationEntryPoint);
     }
+
+    //用于配置UserDetailsService及PasswordEncoder
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
 
+    // Spring Security 定义的用于对密码进行编码及比对的接口，目前使用的是BCryptPasswordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
