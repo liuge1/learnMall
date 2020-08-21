@@ -52,7 +52,12 @@ http://www.macrozheng.com
     
     下载客户端程序https://download.robomongo.org/1.2.1/windows/robo3t-1.2.1-windows-x86_64-3e50a65.zip
 
-
+8. RabbitMQ
+    1. 安装Erlang 下载地址http://erlang.org/download/otp_win64_21.3.exe
+    2. 安装RabbitMQ 下载地址：https://dl.bintray.com/rabbitmq/all/rabbitmq-server/3.7.14/rabbitmq-server-3.7.14.exe
+        问地址查看是否安装成功：http://localhost:15672/
+        输入账号密码并登录 guest guest
+        
  
   
   
