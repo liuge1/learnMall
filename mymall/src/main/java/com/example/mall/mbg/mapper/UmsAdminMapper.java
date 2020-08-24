@@ -14,7 +14,7 @@ public interface UmsAdminMapper {
 
     int insert(UmsAdmin record);
 
-    int insertSelective(UmsAdmin record);
+//    int insertSelective(UmsAdmin record);
 
     List<UmsAdmin> selectByExample(UmsAdminExample example);
 

@@ -52,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()//基于token，所以不用session
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, //允许对于网站的静态资源的无授权访问
+                .antMatchers(HttpMethod.GET,
+                        //允许对于网站的静态资源的无授权访问
                         "/",
                         "/*.html",
                         "/favicon.ico",
@@ -67,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
                 .permitAll()
-                .antMatchers("/**")//测试时全部运行访问
-                .permitAll()
+//                .antMatchers("/**")//测试时全部运行访问
+//                .permitAll()
                 .anyRequest()//除上面的所有请求全部需要鉴权认证
                 .authenticated();
         //禁止缓存

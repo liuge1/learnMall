@@ -104,4 +104,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         return adminRoleRelationDao.getPermissionList(adminId);
 
     }
+
+    @Override
+    public UmsAdmin getCurrentAdmin() {
+        return null;
+    }
 }
