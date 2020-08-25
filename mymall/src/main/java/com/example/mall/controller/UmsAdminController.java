@@ -1,12 +1,14 @@
 package com.example.mall.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.example.mall.common.CommonPage;
 import com.example.mall.common.CommonResult;
 import com.example.mall.dto.UmsAdminLoginParam;
 import com.example.mall.mbg.model.UmsAdmin;
 import com.example.mall.mbg.model.UmsPermission;
 import com.example.mall.mbg.model.UmsRole;
 import com.example.mall.service.UmsAdminService;
+import com.example.mall.service.UmsRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class UmsAdminController {
 
     @Autowired
     private UmsAdminService adminService;
+    @Autowired
+    private UmsRoleService roleService;
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
@@ -61,6 +65,32 @@ public class UmsAdminController {
         return CommonResult.success(tokenMap);
     }
 
+    @ApiOperation(value = "登出功能")
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult logout() {
+        return CommonResult.success(null);
+    }
+
+
+    @ApiOperation("根据用户名或姓名分页获取用户列表")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<CommonPage<UmsAdmin>> list(@RequestParam(value = "keyword", required = false) String keyword,
+                                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        List<UmsAdmin> adminList = adminService.list(keyword, pageSize, pageNum);
+        return CommonResult.success(CommonPage.restPage(adminList));
+    }
+
+    @ApiOperation("获取指定用户的角色")
+    @RequestMapping(value = "/role/{adminId}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long adminId) {
+        List<UmsRole> roleList = adminService.getRoleList(adminId);
+        return CommonResult.success(roleList);
+    }
+
     @ApiOperation("获取用户所有权限（包括+-权限）")
     @PostMapping(value = "/permission/{adminId}")
     public CommonResult<List<UmsPermission>> getPermissionList(@PathVariable Long adminId) {
@@ -83,5 +113,6 @@ public class UmsAdminController {
             data.put("roles",roles);
         }
         return CommonResult.success(data);
+
     }
 }

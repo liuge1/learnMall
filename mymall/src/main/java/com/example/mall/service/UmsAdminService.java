@@ -2,6 +2,7 @@ package com.example.mall.service;
 
 import com.example.mall.mbg.model.UmsAdmin;
 import com.example.mall.mbg.model.UmsPermission;
+import com.example.mall.mbg.model.UmsRole;
 
 import java.util.List;
 
@@ -39,4 +40,18 @@ public interface UmsAdminService {
      * 获取用户所有权限（包括角色权限和+-权限）
      */
     UmsAdmin getCurrentAdmin();
+
+    /**
+     * 获取用户对于角色
+     */
+    List<UmsRole> getRoleList(Long adminId);
+
+    /**
+     * 根据用户名或昵称分页查询用户
+     */
+    List<UmsAdmin> list(String keyword, Integer pageSize, Integer pageNum);
+
+
+
+
 }

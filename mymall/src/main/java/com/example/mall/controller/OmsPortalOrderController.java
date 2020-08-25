@@ -25,10 +25,10 @@
 //    @Autowired
 //    private OmsPortalOrderService portalOrderService;
 //
-//    @ApiOperation("根据购物车信息生成订单")
-//    @RequestMapping(value = "/generateOrder", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Object generateOrder(@RequestBody OrderParam orderParam) {
-//        return portalOrderService.generateOrder(orderParam);
-//    }
+////    @ApiOperation("根据购物车信息生成订单")
+////    @RequestMapping(value = "/generateOrder", method = RequestMethod.POST)
+////    @ResponseBody
+////    public Object generateOrder(@RequestBody OrderParam orderParam) {
+////        return portalOrderService.generateOrder(orderParam);
+////    }
 //}

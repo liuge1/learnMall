@@ -1,6 +1,7 @@
 package com.example.mall.dao;
 
 import com.example.mall.mbg.model.UmsPermission;
+import com.example.mall.mbg.model.UmsRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,4 +17,11 @@ public interface UmsAdminRoleRelationDao {
      * 获取用户所有权限(包括+-权限)
      */
     List<UmsPermission> getPermissionList(@Param("adminId") Long adminId);
+
+    /**
+     * 获取用于所有角色
+     */
+    List<UmsRole> getRoleList(@Param("adminId") Long adminId);
+
+
 }
