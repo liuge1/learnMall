@@ -1,28 +1,38 @@
 package com.example.mall.config;
 
-import com.example.mall.component.JwtAuthenticationTokenFilter;
-import com.example.mall.component.RestAuthenticationEntryPoint;
-import com.example.mall.component.RestfulAccessDeniedHandler;
+import com.example.mall.component.*;
+import com.example.mall.dao.UmsAdminRoleRelationDao;
 import com.example.mall.dto.AdminUserDetails;
 import com.example.mall.mbg.model.UmsAdmin;
 import com.example.mall.mbg.model.UmsPermission;
+import com.example.mall.mbg.model.UmsResource;
+import com.example.mall.mbg.model.UmsRole;
+import com.example.mall.service.DynamicSecurityService;
 import com.example.mall.service.UmsAdminService;
+import com.example.mall.service.UmsResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Classname SecurityConfig
@@ -37,6 +47,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UmsAdminService adminService;
+    @Autowired
+    private UmsResourceService resourceService;
+
+    @Autowired(required = false)
+    private DynamicSecurityService dynamicSecurityService;
+    @Autowired
+    private UmsAdminRoleRelationDao adminRoleRelationDao;
+
 
     @Autowired
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
@@ -46,38 +64,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //用于配置需要拦截的url路径，jwt过滤器以及异常后的处理器
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity.csrf() //由于使用的是JWT ，我们这里不需要csrf
-                .disable()
-                .sessionManagement()//基于token，所以不用session
-                .and()
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity
+                .authorizeRequests();
+        for (String url : ignoreUrlsConfig().getUrls()) {
+            registry.antMatchers(url).permitAll();
+        }
+        //允许跨域请求的OPTIONS请求
+        registry.antMatchers(HttpMethod.OPTIONS).permitAll();
+        //任何请求需要身份认证
+        registry.and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,
-                        //允许对于网站的静态资源的无授权访问
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js",
-                        "/swagger-resources/**",
-                        "/v2/api-docs/**"
-                )
-                .permitAll()
-                .antMatchers("/admin/login", "/admin/register")//对登录注册要允许匿名访问
-                .permitAll()
-                .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
-                .permitAll()
-//                .antMatchers("/**")//测试时全部运行访问
-//                .permitAll()
-                .anyRequest()//除上面的所有请求全部需要鉴权认证
-                .authenticated();
-        //禁止缓存
-        httpSecurity.headers().cacheControl();
-        httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.exceptionHandling()
-                .accessDeniedHandler(restfulAccessDeniedHandler)
-                .authenticationEntryPoint(restAuthenticationEntryPoint);
+                .anyRequest()
+                .authenticated()
+                //关闭跨站请求防护及不是要session
+                .and()
+                .csrf()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //自定义权限拒绝处理类
+                .and()
+                .exceptionHandling().accessDeniedHandler(restfulAccessDeniedHandler)
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                //自定义权限拦截器JWT过滤器
+        .and().addFilterBefore(jwtAuthenticationTokenFilter(),UsernamePasswordAuthenticationFilter.class);
+        if(dynamicSecurityService!=null){
+            registry.and().addFilterBefore(dynamicSecurityFilter(), FilterSecurityInterceptor.class);
+
+        }
     }
 
     //用于配置UserDetailsService及PasswordEncoder
@@ -98,10 +112,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return username -> {
             UmsAdmin admin = adminService.getAdminByUsername(username);
             if (admin != null) {
-                List<UmsPermission> permissionList = adminService.getPermissionList(admin.getId());
-                return new AdminUserDetails(admin, permissionList);
+                List<UmsResource> resourceList = adminRoleRelationDao.getResourceList(admin.getId());
+                return new AdminUserDetails(admin, resourceList);
             }
             throw new UsernameNotFoundException("用户名或密码错误");
+        };
+    }
+
+    @Bean
+    public DynamicSecurityService dynamicSecurityService() {
+        return new DynamicSecurityService() {
+            @Override
+            public Map<String, ConfigAttribute> loadDataSource() {
+                Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
+                List<UmsResource> resourceList = resourceService.listAll();
+                for (UmsResource resource : resourceList) {
+                    map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resource.getId() + ":" + resource.getName()));
+                }
+                return map;
+            }
         };
     }
 
@@ -109,4 +138,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
     }
+
+
+    @ConditionalOnBean(name = "dynamicSecurityService")
+    @Bean
+    public DynamicAccessDecisionManager dynamicAccessDecisionManager() {
+        return new DynamicAccessDecisionManager();
+    }
+
+
+    @ConditionalOnBean(name = "dynamicSecurityService")
+    @Bean
+    public DynamicSecurityFilter dynamicSecurityFilter() {
+        return new DynamicSecurityFilter();
+    }
+
+    @ConditionalOnBean(name = "dynamicSecurityService")
+    @Bean
+    public DynamicSecurityMetadataSource dynamicSecurityMetadataSource() {
+        return new DynamicSecurityMetadataSource();
+    }
+
+
+    @Bean
+    public IgnoreUrlsConfig ignoreUrlsConfig() {
+        return new IgnoreUrlsConfig();
+    }
+
+
 }

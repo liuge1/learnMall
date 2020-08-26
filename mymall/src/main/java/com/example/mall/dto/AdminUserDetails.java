@@ -2,6 +2,7 @@ package com.example.mall.dto;
 
 import com.example.mall.mbg.model.UmsAdmin;
 import com.example.mall.mbg.model.UmsPermission;
+import com.example.mall.mbg.model.UmsResource;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,15 +22,15 @@ import java.util.stream.Collectors;
 public class AdminUserDetails implements UserDetails {
 
     private UmsAdmin umsAdmin;
-    private List<UmsPermission> permissionList;
+    private List<UmsResource> resourceList;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //返回当前用户的权限
-        return permissionList.stream().filter( permission-> permission.getValue()!=null)
-        .map(permission-> new SimpleGrantedAuthority(permission.getValue()))
-        .collect(Collectors.toList());
+        return resourceList.stream()
+        .map(role-> new SimpleGrantedAuthority(role.getId()+":"+role.getName())).collect(Collectors.toList());
+
     }
 
     @Override
