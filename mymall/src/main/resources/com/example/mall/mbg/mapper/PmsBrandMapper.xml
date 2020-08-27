@@ -212,7 +212,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.example.mall.mbg.model.PmsBrandExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.example.mall.mbg.model.PmsBrandExample" resultType="java.lang.Long">
     select count(*) from pms_brand
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -355,8 +355,4 @@
       big_pic = #{bigPic,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-
-
-
 </mapper>

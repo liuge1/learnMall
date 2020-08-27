@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface UmsAdminMapper {
-    int countByExample(UmsAdminExample example);
+    long countByExample(UmsAdminExample example);
 
     int deleteByExample(UmsAdminExample example);
 
@@ -14,7 +14,7 @@ public interface UmsAdminMapper {
 
     int insert(UmsAdmin record);
 
-//    int insertSelective(UmsAdmin record);
+    int insertSelective(UmsAdmin record);
 
     List<UmsAdmin> selectByExample(UmsAdminExample example);
 

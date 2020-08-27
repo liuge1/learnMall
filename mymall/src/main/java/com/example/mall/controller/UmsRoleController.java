@@ -73,6 +73,15 @@ public class UmsRoleController {
         return CommonResult.success(count);
     }
 
+    @ApiOperation("给角色分配资源")
+    @RequestMapping(value = "/allocResource", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult allocResource(@RequestParam Long roleId, @RequestParam List<Long> resourceIds) {
+        int count = roleService.allocResource(roleId, resourceIds);
+        return CommonResult.success(count);
+    }
+
+
     @ApiOperation("获取角色相关资源")
     @RequestMapping(value = "/listResource/{roleId}", method = RequestMethod.GET)
     @ResponseBody

@@ -39,9 +39,11 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.mall.mbg.mapper"
                              targetProject="E:\learnMall\mymall\src\main\java"/>
         <!--生成全部表tableName设为%-->
-        <!--<table tableName="pms_brand">-->
-        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-        <!--</table>-->
+
+        <table tableName="%">
+        <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
         <!--后台用户表-->
         <!--<table tableName="ums_admin">-->
         <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
@@ -106,9 +108,9 @@
             <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
         <!--</table>-->
 
-        <table tableName="oms_order">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+        <!--<table tableName="oms_order">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
 
     </context>
 </generatorConfiguration>

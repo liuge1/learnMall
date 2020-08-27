@@ -4,6 +4,7 @@ import com.example.mall.dao.UmsMenuDao;
 import com.example.mall.dao.UmsRoleDao;
 import com.example.mall.mbg.mapper.UmsRoleMapper;
 import com.example.mall.mbg.mapper.UmsRoleMenuRelationMapper;
+import com.example.mall.mbg.mapper.UmsRoleResourceRelationMapper;
 import com.example.mall.mbg.model.*;
 import com.example.mall.service.UmsRoleService;
 import com.github.pagehelper.PageHelper;
@@ -27,6 +28,8 @@ public class UmsRoleServiceImpl implements UmsRoleService {
     private UmsRoleMapper roleMapper;
     @Autowired
     private UmsRoleMenuRelationMapper roleMenuRelationMapper;
+    @Autowired
+    UmsRoleResourceRelationMapper roleResourceRelationMapper;
 
     @Autowired
     UmsMenuDao umsMenuDao;
@@ -110,6 +113,19 @@ public class UmsRoleServiceImpl implements UmsRoleService {
 
     @Override
     public int allocResource(Long roleId, List<Long> resourceIds) {
-        return 0;
+        //先删除原有关系
+        UmsRoleResourceRelationExample example=new UmsRoleResourceRelationExample();
+        example.createCriteria().andRoleIdEqualTo(roleId);
+        roleResourceRelationMapper.deleteByExample(example);
+        //批量插入新关系
+        for (Long resourceId : resourceIds) {
+            UmsRoleResourceRelation relation = new UmsRoleResourceRelation();
+            relation.setRoleId(roleId);
+            relation.setResourceId(resourceId);
+            roleResourceRelationMapper.insert(relation);
+        }
+//        adminCacheService.delResourceListByRole(roleId);
+        return resourceIds.size();
+
     }
 }
