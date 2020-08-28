@@ -7,7 +7,9 @@ import com.example.mall.dto.ProductAttrInfo;
 import com.example.mall.mbg.mapper.PmsProductAttributeCategoryMapper;
 import com.example.mall.mbg.mapper.PmsProductAttributeMapper;
 import com.example.mall.mbg.model.PmsProductAttribute;
+import com.example.mall.mbg.model.PmsProductAttributeExample;
 import com.example.mall.service.PmsProductAttributeService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,11 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
 
     @Override
     public List<PmsProductAttribute> getList(Long cid, Integer type, Integer pageSize, Integer pageNum) {
-        return null;
+        PageHelper.startPage(pageNum, pageSize);
+        PmsProductAttributeExample example = new PmsProductAttributeExample();
+        example.setOrderByClause("sort desc");
+        example.createCriteria().andProductAttributeCategoryIdEqualTo(cid).andTypeEqualTo(type);
+        return productAttributeMapper.selectByExample(example);
     }
 
     @Override

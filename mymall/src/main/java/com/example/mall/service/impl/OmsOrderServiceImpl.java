@@ -1,6 +1,7 @@
 package com.example.mall.service.impl;
 
 import com.example.mall.dao.OmsOrderDao;
+import com.example.mall.dto.OmsOrderDetail;
 import com.example.mall.dto.OmsOrderQueryParam;
 import com.example.mall.mbg.mapper.OmsOrderMapper;
 import com.example.mall.mbg.model.OmsOrder;
@@ -28,5 +29,9 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     public List<OmsOrder> list(OmsOrderQueryParam queryParam, Integer pageSize, Integer pageNum) {
         PageHelper.startPage(pageNum, pageSize);
         return orderDao.getList(queryParam);
+    }
+    @Override
+    public OmsOrderDetail detail(Long id) {
+        return orderDao.getDetail(id);
     }
 }

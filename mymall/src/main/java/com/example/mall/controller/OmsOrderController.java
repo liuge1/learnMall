@@ -2,6 +2,7 @@ package com.example.mall.controller;
 
 import com.example.mall.common.CommonPage;
 import com.example.mall.common.CommonResult;
+import com.example.mall.dto.OmsOrderDetail;
 import com.example.mall.dto.OmsOrderQueryParam;
 import com.example.mall.mbg.model.OmsOrder;
 import com.example.mall.service.OmsOrderService;
@@ -9,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +37,14 @@ public class OmsOrderController {
         List<OmsOrder> orderList = orderService.list(queryParam, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(orderList));
     }
+
+    @ApiOperation("获取订单详情:订单信息、商品信息、操作记录")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<OmsOrderDetail> detail(@PathVariable Long id) {
+        OmsOrderDetail orderDetailResult = orderService.detail(id);
+        return CommonResult.success(orderDetailResult);
+    }
+
 
 }

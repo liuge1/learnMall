@@ -1,16 +1,17 @@
 package com.example.mall.controller;
 
+import com.example.mall.common.CommonPage;
 import com.example.mall.common.CommonResult;
 import com.example.mall.dto.ProductAttrInfo;
+import com.example.mall.mbg.model.PmsProductAttribute;
 import com.example.mall.service.PmsProductAttributeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +28,17 @@ public class PmsProductAttributeController {
     @Autowired
     private PmsProductAttributeService productAttributeService;
 
+    @ApiOperation("根据分类查询属性列表或参数列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "type", value = "0表示属性，1表示参数", required = true, paramType = "query", dataType = "integer")})
+    @RequestMapping(value = "/list/{cid}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<CommonPage<PmsProductAttribute>> getList(@PathVariable Long cid,
+                                                                 @RequestParam(value = "type") Integer type,
+                                                                 @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                                                 @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        List<PmsProductAttribute> productAttributeList = productAttributeService.getList(cid, type, pageSize, pageNum);
+        return CommonResult.success(CommonPage.restPage(productAttributeList));
+    }
 
 
     @ApiOperation("根据商品分类的id获取商品属性及属性分类")

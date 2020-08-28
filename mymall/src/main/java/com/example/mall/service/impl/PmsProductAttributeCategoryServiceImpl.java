@@ -4,7 +4,9 @@ import com.example.mall.dao.PmsProductAttributeCategoryDao;
 import com.example.mall.dto.PmsProductAttributeCategoryItem;
 import com.example.mall.mbg.mapper.PmsProductAttributeCategoryMapper;
 import com.example.mall.mbg.model.PmsProductAttributeCategory;
+import com.example.mall.mbg.model.PmsProductAttributeCategoryExample;
 import com.example.mall.service.PmsProductAttributeCategoryService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,8 @@ public class PmsProductAttributeCategoryServiceImpl implements PmsProductAttribu
 
     @Override
     public List<PmsProductAttributeCategory> getList(Integer pageSize, Integer pageNum) {
-        return null;
+        PageHelper.startPage(pageNum,pageSize);
+        return productAttributeCategoryMapper.selectByExample(new PmsProductAttributeCategoryExample());
     }
 
     @Override

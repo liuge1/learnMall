@@ -1,5 +1,6 @@
 package com.example.mall.service;
 
+import com.example.mall.dto.OmsOrderDetail;
 import com.example.mall.dto.OmsOrderQueryParam;
 import com.example.mall.mbg.model.OmsOrder;
 
@@ -16,4 +17,9 @@ public interface OmsOrderService  {
      * 订单查询
      */
     List<OmsOrder> list(OmsOrderQueryParam queryParam, Integer pageSize, Integer pageNum);
+
+    /**
+     * 获取指定订单详情
+     */
+    OmsOrderDetail detail(Long id);
 }
