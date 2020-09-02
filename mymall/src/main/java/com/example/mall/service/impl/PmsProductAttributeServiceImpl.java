@@ -52,7 +52,7 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
 
     @Override
     public PmsProductAttribute getItem(Long id) {
-        return null;
+        return productAttributeMapper.selectByPrimaryKey(id);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.mall.controller;
 
 import com.example.mall.common.CommonPage;
 import com.example.mall.common.CommonResult;
+import com.example.mall.dto.PmsProductParam;
 import com.example.mall.dto.PmsProductQueryParam;
 import com.example.mall.mbg.model.PmsProduct;
 import com.example.mall.service.PmsProductService;
@@ -9,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +27,20 @@ public class PmsProductController {
 
     @Autowired
     private PmsProductService productService;
+
+    @ApiOperation("创建商品")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult create(@RequestBody PmsProductParam productParam) {
+        int count = productService.create(productParam);
+        if (count > 0) {
+            return CommonResult.success(count);
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+
 
     @ApiOperation("查询商品")
     @RequestMapping(value = "/list", method = RequestMethod.GET)

@@ -41,6 +41,14 @@ public class PmsProductAttributeController {
     }
 
 
+    @ApiOperation("查询单个商品属性")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<PmsProductAttribute> getItem(@PathVariable Long id) {
+        PmsProductAttribute productAttribute = productAttributeService.getItem(id);
+        return CommonResult.success(productAttribute);
+    }
+
     @ApiOperation("根据商品分类的id获取商品属性及属性分类")
     @RequestMapping(value = "/attrInfo/{productCategoryId}", method = RequestMethod.GET)
     @ResponseBody

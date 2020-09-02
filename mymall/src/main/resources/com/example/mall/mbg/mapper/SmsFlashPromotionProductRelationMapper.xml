@@ -167,7 +167,7 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.example.mall.mbg.model.SmsFlashPromotionProductRelationExample" resultType="java.lang.Long">
-    select count(*) from sms_flash_promotion_product_relation
+      select count(*) from sms_flash_promotion_product_relation
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>

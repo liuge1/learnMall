@@ -18,7 +18,7 @@ import java.util.List;
  * @Description 收货地址管理
  * @Date 2020/8/28 16:54
  * @Created by v_geeliu
- */ 
+ */
 @Controller
 @Api(tags = "OmsCompanyAddressController", description = "收货地址管理")
 @RequestMapping("/companyAddress")

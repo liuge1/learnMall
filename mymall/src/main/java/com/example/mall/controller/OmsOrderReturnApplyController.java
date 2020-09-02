@@ -4,6 +4,7 @@ import com.example.mall.common.CommonPage;
 import com.example.mall.common.CommonResult;
 import com.example.mall.dto.OmsOrderReturnApplyResult;
 import com.example.mall.dto.OmsReturnApplyQueryParam;
+import com.example.mall.dto.OmsUpdateStatusParam;
 import com.example.mall.mbg.model.OmsOrderReturnApply;
 import com.example.mall.service.OmsOrderReturnApplyService;
 import io.swagger.annotations.Api;
@@ -43,6 +44,16 @@ public class OmsOrderReturnApplyController {
     public CommonResult getItem(@PathVariable Long id) {
         OmsOrderReturnApplyResult result = returnApplyService.getItem(id);
         return CommonResult.success(result);
+    }
+    @ApiOperation("修改申请状态")
+    @RequestMapping(value = "/update/status/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateStatus(@PathVariable Long id, @RequestBody OmsUpdateStatusParam statusParam) {
+        int count = returnApplyService.updateStatus(id, statusParam);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
     }
 
 }
